@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 
     private final AuthService authService;
-
+    // bloc register
     @PostMapping("/register")
     public UserDto register(@RequestBody AuthRequest request) {
         User user = authService.register(request.email(), request.password());
