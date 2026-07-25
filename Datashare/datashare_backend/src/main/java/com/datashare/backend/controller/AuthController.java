@@ -24,7 +24,7 @@ public class AuthController {
         User user = authService.register(request.email(), request.password());
         return new UserDto(user.getId(), user.getEmail());
     }
-
+   // bloc login
    @PostMapping("/login")
 public UserDto login(@RequestBody AuthRequest request) {
     return authService.login(request.email(), request.password())

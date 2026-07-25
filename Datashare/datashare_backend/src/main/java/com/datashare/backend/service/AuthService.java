@@ -21,7 +21,7 @@ public class AuthService {
         user.setPasswordHash(passwordHash);
         return userRepository.save(user);  // hash plus tard (étape 4)
     }
-
+    // bloc login
     public Optional<User> login(String email, String password) {
         return userRepository.findByEmail(email)
         .filter(u -> u.getPasswordHash().equals(password));
