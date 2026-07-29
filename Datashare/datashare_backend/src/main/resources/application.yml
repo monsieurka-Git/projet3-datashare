@@ -15,3 +15,8 @@ spring:
   sql:
     init:
       mode: always
+      
+security:
+  jwt:
+    secret: "MaCleSuperSecretePourSignerLesTokens123456789012345"
+    expiration: 3600000
