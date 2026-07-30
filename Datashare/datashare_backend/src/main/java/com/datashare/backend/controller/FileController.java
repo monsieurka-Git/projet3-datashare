@@ -79,7 +79,7 @@ public class FileController {
     public FileDto getFile(@PathVariable UUID id) {
         FileEntity file = fileService.findById(id)
                 .orElseThrow(() -> new RuntimeException("File not found"));
-        return new FileDto(file.getId(), file.getFilename(), file.getDownloadLink(), file.getOwnerId());
+        return new FileDto(file.getId(), file.getFilename(), file.getDownloadToken(), file.getOwnerId());
     }
 
     @DeleteMapping("/{id}")

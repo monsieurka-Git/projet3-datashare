@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -69,7 +70,9 @@ public class FileService {
         entity.setContentType(file.getContentType());            // Type MIME
         entity.setStoragePath(target.toString());               // Chemin absolu sur le disque
         entity.setCreatedAt(Instant.now());                     // Date d'upload
-        entity.setOwnerId(userId);                               // Propriétaire du fichier
+        entity.setOriginalName(file.getOriginalFilename());      // Nom original du fichier (affichage)
+        entity.setDownloadToken(UUID.randomUUID().toString());   // Token unique pour le lien de téléchargement (US02)
+        entity.setExpiresAt(Instant.now().plus(7, ChronoUnit.DAYS)); // Expiration du lien dans 7 jours
 
         // Sauvegarde en base de données
         FileEntity saved = fileRepository.save(entity);
@@ -82,8 +85,8 @@ public class FileService {
         return fileRepository.findById(id);
     }
 
-    public Optional<FileEntity> findByLink(String link) {
-        return fileRepository.findByDownloadLink(link);
+    public Optional<FileEntity> findByToken(String token) {
+        return fileRepository.findByDownloadToken(token);
     }
 
     public List<FileEntity> findByUser(UUID userId) {

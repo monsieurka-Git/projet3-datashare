@@ -41,7 +41,8 @@ public class SecurityConfig {
                         "/v3/api-docs/**",
                         "/swagger-ui/**",
                         "/swagger-ui.html",
-                        "/api/files/upload"  // US01 : upload réservé aux utilisateurs authentifiés
+                        "/api/files/metadata/**", // US02 : Métadonnées accessibles sans authentification
+                        "/api/files/download/**"  // US02 : Téléchargement accessible sans authentification
                 ).permitAll()
                 .anyRequest().authenticated()
         );
