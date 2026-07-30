@@ -40,7 +40,8 @@ public class SecurityConfig {
                         "/api/auth/register",
                         "/v3/api-docs/**",
                         "/swagger-ui/**",
-                        "/swagger-ui.html"
+                        "/swagger-ui.html",
+                        "/api/files/upload"  // US01 : upload réservé aux utilisateurs authentifiés
                 ).permitAll()
                 .anyRequest().authenticated()
         );

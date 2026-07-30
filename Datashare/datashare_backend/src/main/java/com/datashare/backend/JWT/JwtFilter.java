@@ -49,10 +49,15 @@ public class JwtFilter extends OncePerRequestFilter {
 
                 Claims claims = jwtProvider.getClaims(token);
 
-                // Crée une authentification basée sur l'email
+                // ✅ Récupère l'UUID utilisateur depuis le subject du token
+                // (le subject est défini comme user.getId().toString() dans JwtProvider.generateToken)
+                String userId = claims.getSubject();
+
+                // ✅ Crée une authentification avec l'UUID comme principal
+                // Cela permet au controller de récupérer l'ID via auth.getName()
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
-                                claims.get("email"),
+                                userId,      // auth.getName() = UUID de l'utilisateur
                                 null,
                                 null
                         );
