@@ -1,9 +1,11 @@
 spring:
+  # Configuration de la base de données PostgreSQL
   datasource:
     url: jdbc:postgresql://localhost:5432/datashare
     username: postgres
     password: postgres
 
+  # Configuration JPA / Hibernate
   jpa:
     hibernate:
       ddl-auto: update
@@ -15,8 +17,16 @@ spring:
   sql:
     init:
       mode: always
-      
+
+  # ✅ Configuration obligatoire pour l'upload de fichiers multipart
+  servlet:
+    multipart:
+      enabled: true               # Active le support multipart
+      max-file-size: 10MB         # Taille max d'un fichier (défaut 1MB)
+      max-request-size: 10MB       # Taille max de la requête totale
+
 security:
   jwt:
-    secret: "MaCleSuperSecretePourSignerLesTokens123456789012345"
+    # Secret pour la signature des JWT (minimum 32 caractères)
+    secret: "MaCleSuperSecretePourSignerLesTokens12345678901234567890"
     expiration: 3600000
