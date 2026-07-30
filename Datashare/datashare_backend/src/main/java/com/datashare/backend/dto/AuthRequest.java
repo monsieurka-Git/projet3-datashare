@@ -1,6 +1,13 @@
 package com.datashare.backend.dto;
 
-public record AuthRequest(
-    String email,
-    String password
-) {}
+import lombok.Data;
+
+/**
+ * DTO utilisé pour les requêtes register et login.
+ * Contient email, password, firstname, lastname.
+ */
+@Data
+public class AuthRequest {
+    private String email;
+    private String password;
+}
