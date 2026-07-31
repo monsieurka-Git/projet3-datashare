@@ -75,14 +75,14 @@ public class FileController {
         return ResponseEntity.ok(saved);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/info/{id}")
     public FileDto getFile(@PathVariable UUID id) {
         FileEntity file = fileService.findById(id)
                 .orElseThrow(() -> new RuntimeException("File not found"));
         return new FileDto(file.getId(), file.getFilename(), file.getDownloadToken(), file.getOwnerId());
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/info/{id}")
     public void delete(@PathVariable UUID id) {
         fileService.delete(id);
     }

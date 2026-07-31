@@ -42,7 +42,9 @@ public class SecurityConfig {
                         "/swagger-ui/**",
                         "/swagger-ui.html",
                         "/api/files/metadata/**", // US02 : Métadonnées accessibles sans authentification
-                        "/api/files/download/**"  // US02 : Téléchargement accessible sans authentification
+                        "/api/files/download/**",  // US02 : Téléchargement accessible sans authentification
+                        "/api/files/history"  // US05 : historique réservé aux utilisateurs connectés
+
                 ).permitAll()
                 .anyRequest().authenticated()
         );
