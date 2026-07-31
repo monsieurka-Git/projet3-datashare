@@ -30,9 +30,11 @@ public class JwtFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        // 🔹 Ignore les endpoints d'authentification
+        // 🔹 Ignore les endpoints publics (authentification + téléchargement sans JWT)
         String path = request.getServletPath();
-        if (path.startsWith("/api/auth")) {
+        if (path.startsWith("/api/auth") ||
+            path.startsWith("/api/files/metadata/") ||
+            path.startsWith("/api/files/download/")) {
             filterChain.doFilter(request, response);
             return;
         }

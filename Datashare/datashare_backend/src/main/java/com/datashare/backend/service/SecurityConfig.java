@@ -33,6 +33,9 @@ public class SecurityConfig {
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
 
+        // Désactive l'authentification anonyme pour éviter "anonymousUser" dans auth.getName()
+        http.anonymous(anonymous -> anonymous.disable());
+
         // Définition des endpoints publics et protégés
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(
@@ -41,12 +44,12 @@ public class SecurityConfig {
                         "/v3/api-docs/**",
                         "/swagger-ui/**",
                         "/swagger-ui.html",
-                        "/api/files/metadata/**", // US02 : Métadonnées accessibles sans authentification
-                        "/api/files/download/**",  // US02 : Téléchargement accessible sans authentification
-                        "/api/files/history"  // US05 : historique réservé aux utilisateurs connectés
-
+                        "/api/files/metadata/**", // US02 : Métadonnées accessibles SANS authentification
+                        "/api/files/download/**"   // US02 : Téléchargement accessible SANS authentification
+                        // ⚠️ /api/files/history et /api/files/info/** ne sont PAS dans permitAll
+                        //    car ils nécessitent un utilisateur authentifié (JWT)
                 ).permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().authenticated() // Tous les autres endpoints nécessitent un JWT valide
         );
 
         // Ajout du filtre JWT avant le filtre d'authentification standard
