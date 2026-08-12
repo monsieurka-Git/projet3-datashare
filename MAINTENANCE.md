@@ -2,7 +2,7 @@
 
 ## 1. Vue d’ensemble
 
-**DataShare** est une application de partage de fichiers temporaire composée de :
+DataShare est une application de partage de fichiers temporaire composée de :
 
 | Composant | Technologie | Port par défaut |
 |-----------|-------------|-----------------|
@@ -32,9 +32,16 @@ Ce document décrit les opérations de maintenance courantes, le déploiement, l
 ### 3.1 Base de données
 
 ```bash
-# Exemple : créer la base
-createdb datashare
-# Adapter spring.datasource.url / username / password
+# Datashare connexion postgresql
+psql -U postgres -d datashare
+# Lister les tables
+\d
+```
+
+Ou avec Docker :
+
+```bash
+docker compose up -d db
 ```
 
 ### 3.2 Backend
@@ -59,7 +66,7 @@ npm start
 
 | Contrôle | Action |
 |----------|--------|
-| Santé API | `GET http://localhost:8080/api/auth/...` ou Swagger |
+| Santé API | GET http://localhost:8080/api/auth/... ou Swagger |
 | CORS | Origine front `http://localhost:4200` autorisée |
 | JWT | Login → token dans `localStorage` (`token`, `userId`) |
 | Upload | Fichier < 1 Go, extension autorisée |
@@ -92,6 +99,9 @@ datashare/
 │   │   └── interceptors/
 │   ├── cypress/            # E2E
 │   └── package.json
+├── .github/
+│   └── dependabot.yml      # Mises à jour auto Dependabot
+├── renovate.json           # Mises à jour auto Renovate
 └── docs/
     ├── TESTING.md
     ├── MAINTENANCE.md
@@ -115,6 +125,7 @@ Paramètres typiques à externaliser en production :
 | Dossier `uploads/` | Chemin absolu recommandé en prod |
 
 **Bonnes pratiques :**
+
 - Utiliser des variables d’environnement ou un coffre (Vault, secrets CI)
 - Profils Spring : `application-dev.properties` / `application-prod.properties`
 - Ne pas versionner les secrets
@@ -174,7 +185,9 @@ tar -czf uploads_backup_$(date +%Y%m%d).tar.gz uploads/
 
 ## 8. Mises à jour et dépendances
 
-### Backend
+### 8.1 Mise à jour manuelle
+
+#### Backend
 
 ```bash
 cd datashare_backend
@@ -182,7 +195,7 @@ cd datashare_backend
 ./mvnw clean verify
 ```
 
-### Frontend
+#### Frontend
 
 ```bash
 cd datashare_frontend
@@ -193,6 +206,92 @@ npm run e2e:run
 ```
 
 **Règle :** ne jamais monter de version majeure (Spring Boot, Angular) sans exécuter la batterie de tests (`TESTING.md`).
+
+### 8.2 Automatisation — Dependabot (GitHub)
+
+[Dependabot](https://docs.github.com/en/code-security/dependabot) ouvre des **pull requests** automatiques lorsque des dépendances npm, Maven ou GitHub Actions ont une mise à jour.
+
+**Fichier de configuration :** [`.github/dependabot.yml`](../.github/dependabot.yml) à la racine du dépôt.
+
+| Écosystème | Répertoire | Fréquence proposée |
+|------------|------------|--------------------|
+| `npm` | `/datashare_frontend` | Hebdomadaire (lundi) |
+| `maven` | `/datashare_backend` | Hebdomadaire (lundi) |
+| `github-actions` | `/` | Mensuelle |
+
+**Contenu utile de la config DataShare :**
+
+- Limite de PR ouvertes (`open-pull-requests-limit`)
+- Labels `dependencies`, `frontend`, `backend`, `ci`
+- Groupes : packages `@angular/*`, écosystème Spring
+- Ignore des **majors** Angular / Spring Boot (traitement manuel)
+
+**Bonnes pratiques Dependabot :**
+
+- Activer les PR groupées (`groups`) pour limiter le bruit (patch / minor)
+- Exiger les checks CI (tests unitaires + build) avant merge
+- Traiter les **majors** manuellement (changelog + tests E2E)
+- Ne pas merger une PR de sécurité sans lire l’advisory
+
+**Activation GitHub :** *Settings → Code security → Dependabot → Enable*, ou simple présence de `.github/dependabot.yml` sur la branche par défaut.
+
+### 8.3 Automatisation — Renovate
+
+[Renovate](https://docs.renovatebot.com/) est une alternative (ou un complément) à Dependabot, souvent plus configurable (groupes, calendriers, dashboard, règles fines).
+
+**Fichier de configuration :** [`renovate.json`](../renovate.json) à la racine du dépôt.
+
+| Fonction | Intérêt pour DataShare |
+|----------|------------------------|
+| Multi-écosystème (`npm`, `maven`) | Un seul bot pour front + back |
+| `packageRules` | Grouper Angular, Spring Boot, Cypress |
+| `schedule` | PR hors heures de démo / sprint (ex. lundi matin) |
+| `prConcurrentLimit` | Éviter une avalanche de PR |
+| Labels `dependencies` / `security` | Tri dans le board |
+| `:semanticCommits` | Messages de commit type Conventional Commits |
+| `vulnerabilityAlerts` | Priorisation des correctifs de sécurité |
+
+**Activation :**
+
+1. Installer l’application **Renovate** sur le dépôt GitHub ou GitLab, **ou**
+2. Utiliser un workflow self-hosted (`renovatebot/github-action`)
+
+**Exemple de principe de configuration (extrait) :**
+
+```json
+{
+  "extends": ["config:recommended", ":dependencyDashboard", ":semanticCommits"],
+  "timezone": "Europe/Paris",
+  "schedule": ["before 9am on monday"],
+  "prConcurrentLimit": 5,
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["^@angular/"],
+      "groupName": "angular",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchPackagePatterns": ["^org\\.springframework"],
+      "groupName": "spring",
+      "matchUpdateTypes": ["minor", "patch"]
+    }
+  ]
+}
+```
+
+### 8.4 Processus commun Dependabot / Renovate
+
+```text
+PR dépendances → CI verte (mvn test + npm test) → revue humaine → merge
+```
+
+| Type de mise à jour | Traitement recommandé |
+|---------------------|------------------------|
+| Patch / minor | Revue rapide si CI verte |
+| Major (Angular, Spring Boot) | Note dans l’historique (section 14) + tests E2E Cypress |
+| Sécurité (CVE) | Priorité haute, lecture de l’advisory obligatoire |
+
+**Ne pas** activer l’auto-merge non contrôlé sur les majors framework.
 
 ---
 
@@ -205,7 +304,8 @@ npm run e2e:run
 | Cypress screenshots | `cypress/screenshots/` en cas d’échec E2E |
 
 Niveaux conseillés :
-- **PROD** : `INFO` pour le métier, `WARN`/`ERROR` pour les échecs
+
+- **PROD** : `INFO` pour le métier, `WARN` / `ERROR` pour les échecs
 - Éviter de logger les mots de passe, tokens complets ou contenus de fichiers
 
 ---
@@ -230,7 +330,7 @@ Vérifier dans les logs au redémarrage que `@EnableScheduling` est actif (`Back
 | Download « lien expiré » | `expiresAt` dépassé | Nouveau upload ; vérifier horloge serveur |
 | « Téléchargement en cours » bloqué | État UI / réponse blob erreur | Voir correctifs download + Network tab |
 | Suppression en double-clic | Modale non fermée immédiatement | Comportement corrigé (fermeture optimiste) |
-| Compilation Lombok | Annotation processing | Préférer getters/setters explicites déjà en place sur entités critiques |
+| Compilation Lombok | Annotation processing | Préférer getters/setters explicites déjà en place |
 | Cypress ne démarre pas | Binaire manquant | `npx cypress install` |
 
 ---
@@ -252,7 +352,7 @@ Vérifier dans les logs au redémarrage que `@EnableScheduling` est actif (`Back
 |------|----------------|
 | Maintainer backend | API, BDD, stockage, jobs |
 | Maintainer frontend | UI Angular, Cypress |
-| Ops / DevOps | Déploiement, backups, monitoring |
+| Ops / DevOps | Déploiement, backups, monitoring, bots Dependabot/Renovate |
 
 ---
 
@@ -261,4 +361,4 @@ Vérifier dans les logs au redémarrage que `@EnableScheduling` est actif (`Back
 | Date | Version app | Notes |
 |------|-------------|-------|
 | 2026-08 | US07–US10 + tests | Upload anonyme, tags, purge, JaCoCo, Cypress |
-
+| 2026-08 | Maintenance deps | Intégration Dependabot (`.github/dependabot.yml`) et Renovate (`renovate.json`) |
