@@ -61,7 +61,7 @@ Voir `docs/` pour le détail (architecture, sécurité, tests, perf, maintenance
 ### 1. Base de données
 
 ```bash
-# Option A — Installation PostgreSQL
+# Installation PostgreSQL
 Installation de PostgreSQL 18.4
 2.1 Téléchargement
 PostgreSQL a été téléchargé depuis le site officiel :
