@@ -202,6 +202,8 @@ Voir aussi `TESTING.md` :
 
 Tests additionnels recommandés avant prod : scan dépendances (`npm audit`, OWASP Dependency-Check), header scan, test d’IDOR manuel.
 
+![alt text](Audit_Frontend.md)
+
 ---
 
 ## 13. Matrice des menaces (résumé)
