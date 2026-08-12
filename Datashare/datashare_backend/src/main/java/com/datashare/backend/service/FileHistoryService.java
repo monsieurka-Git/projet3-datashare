@@ -3,7 +3,6 @@ package com.datashare.backend.service;
 import com.datashare.backend.dto.FileHistoryResponse;
 import com.datashare.backend.model.FileEntity;
 import com.datashare.backend.repository.FileRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -18,10 +17,13 @@ import java.util.stream.Collectors;
  * - Aucun tri ni filtrage obligatoire
  */
 @Service
-@RequiredArgsConstructor
 public class FileHistoryService {
 
     private final FileRepository fileRepository;
+
+    public FileHistoryService(FileRepository fileRepository) {
+        this.fileRepository = fileRepository;
+    }
 
     /**
      * Retourne l'historique des fichiers d'un utilisateur.

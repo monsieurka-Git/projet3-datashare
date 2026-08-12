@@ -3,7 +3,6 @@ package com.datashare.backend.controller;
 import com.datashare.backend.dto.AuthRequest;
 import com.datashare.backend.dto.AuthResponse;
 import com.datashare.backend.service.AuthService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,10 +12,13 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/api/auth")
-@RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authService;
+
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
 
     /**
      * US03 — Inscription utilisateur.

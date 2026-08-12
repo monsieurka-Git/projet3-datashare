@@ -1,0 +1,9 @@
+<!-- Sidebar latérale pour la navigation -->
+
+<aside class="sidebar">
+  <ul>
+    <li *ngFor="let link of links">
+      <a [routerLink]="link.route">{{ link.label }}</a>
+    </li>
+  </ul>
+</aside>

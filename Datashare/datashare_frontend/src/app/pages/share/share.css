@@ -1,0 +1,109 @@
+/* Fond dégradé */
+.ds-gradient-bg {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #ffb46b 0%, #e25b3b 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.ds-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 32px;
+  color: #ffffff;
+}
+
+.ds-header__brand {
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.ds-link {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* Contenu principal */
+.ds-main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Carte */
+.ds-card {
+  background-color: #ffffff;
+  border-radius: 24px;
+  padding: 32px;
+  width: 420px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.ds-card h1 {
+  margin-bottom: 24px;
+  font-size: 20px;
+}
+
+/* Sélecteur de fichier */
+.ds-file-picker {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.ds-file-picker input {
+  margin-top: 8px;
+}
+
+/* Infos fichier */
+.ds-file-info {
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+/* Champ email */
+.ds-form-label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.ds-input {
+  margin-top: 4px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+}
+
+/* Bouton */
+.ds-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.ds-btn--primary {
+  background-color: #e25b3b;
+  color: #ffffff;
+}
+
+/* Message de statut */
+.ds-status {
+  margin-top: 12px;
+  font-size: 13px;
+}
+
+/* Footer */
+.ds-footer {
+  padding: 16px 32px;
+  color: #ffffff;
+  font-size: 12px;
+  text-align: center;
+}

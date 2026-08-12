@@ -1,0 +1,44 @@
+/* Styles de l'en-tête DataShare */
+
+.ds-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 32px;
+  color: #ffffff;
+}
+
+.ds-header__brand {
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.ds-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ds-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.ds-btn--primary {
+  background-color: #ffffff;
+  color: #e25b3b;
+}
+
+.ds-btn--secondary {
+  background-color: #ffffff;
+  color: #e25b3b;
+}
+
+.ds-link {
+  color: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+}

@@ -3,8 +3,6 @@ package com.datashare.backend.controller;
 import com.datashare.backend.dto.FileMetadataResponse;
 import com.datashare.backend.model.FileEntity;
 import com.datashare.backend.service.FileDownloadService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,13 +26,21 @@ import org.springframework.web.bind.annotation.*;
  * ✅ Test avec Swagger :
  *    Les endpoints sont publics, pas besoin de token JWT
  */
-@Slf4j
 @RestController
 @RequestMapping("/api/files")
-@RequiredArgsConstructor
+@CrossOrigin(
+        originPatterns = {"http://localhost:4200", "http://127.0.0.1:4200"},
+        allowCredentials = "true"
+)
 public class FileDownloadController {
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FileDownloadController.class);
+
     private final FileDownloadService fileDownloadService;
+
+    public FileDownloadController(FileDownloadService fileDownloadService) {
+        this.fileDownloadService = fileDownloadService;
+    }
 
     /**
      * US02 — Affichage des métadonnées avant téléchargement.
@@ -50,7 +56,7 @@ public class FileDownloadController {
     @GetMapping("/metadata/{token}")
     public ResponseEntity<FileMetadataResponse> getMetadata(@PathVariable String token) {
 
-        log.debug("📄 Consultation des métadonnées pour le token : {}", token);
+        log.info("📄 Consultation des métadonnées pour le token : {}", token);
 
         // ✅ Utilise getFileMetadata() qui ne vérifie PAS le mot de passe
         //    (contrairement à getFileForDownload() utilisé pour le téléchargement effectif)

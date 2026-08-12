@@ -1,0 +1,58 @@
+<div class="ds-gradient-bg">
+  <main class="ds-main">
+    <section class="ds-card ds-share-card">
+      <h1>Partager un fichier</h1>
+
+      <!-- Sélecteur de fichier -->
+      <label class="ds-file-picker">
+        <span>Choisir un fichier</span>
+        <input type="file" (change)="onFileSelected($event)" />
+      </label>
+
+      <!-- Affichage du fichier sélectionné -->
+      <div class="ds-file-info" *ngIf="selectedFileName">
+        <strong>{{ selectedFileName }}</strong>
+        <span>{{ selectedFileName }}</span>
+      </div>
+
+      <!-- Champ email du destinataire -->
+      <label class="ds-form-label">
+        Email du destinataire
+        <input
+          type="email"
+          name="recipientEmail"
+          [(ngModel)]="recipientEmail"
+          class="ds-input"
+          placeholder="ex: john.doe@email.com"
+        />
+      </label>
+
+      <!-- Bouton partager -->
+      <button class="ds-btn ds-btn--primary" (click)="onShare()">
+        Partager
+      </button>
+
+      <!-- Message de statut -->
+      <p class="ds-status" *ngIf="statusMessage">
+        {{ statusMessage }}
+      </p>
+
+      <!-- Lien de téléchargement après partage réussi -->
+      <div *ngIf="shareDownloadUrl"
+           style="margin-top:16px;padding:12px;background:#ecfdf5;border:2px solid #10b981;border-radius:12px;text-align:left;">
+        <p style="margin:0 0 8px 0;font-weight:600;color:#065f46;">
+          🔗 Lien à transmettre au destinataire :
+        </p>
+        <a [href]="shareDownloadUrl" target="_blank"
+           style="word-break:break-all;color:#047857;font-size:13px;">
+          {{ shareDownloadUrl }}
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="ds-footer">
+    Copyright DataShare® 2023
+  </footer>
+</div>

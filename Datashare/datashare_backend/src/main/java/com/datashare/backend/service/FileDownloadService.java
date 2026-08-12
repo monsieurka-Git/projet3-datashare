@@ -2,8 +2,6 @@ package com.datashare.backend.service;
 
 import com.datashare.backend.model.FileEntity;
 import com.datashare.backend.repository.FileRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,13 +20,18 @@ import java.util.UUID;
  * - Erreur explicite si lien expiré ou invalide
  * - Métadonnées visibles SANS mot de passe (avant téléchargement)
  */
-@Slf4j
 @Service
-@RequiredArgsConstructor
 public class FileDownloadService {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FileDownloadService.class);
 
     private final FileRepository fileRepository;
     private final PasswordEncoder passwordEncoder;
+
+    public FileDownloadService(FileRepository fileRepository, PasswordEncoder passwordEncoder) {
+        this.fileRepository = fileRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     // 📁 Dossier de stockage des fichiers uploadés (relatif à la racine du projet)
     private final Path storagePath = Paths.get("uploads");

@@ -5,7 +5,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -19,10 +18,13 @@ import java.io.IOException;
  * et la validité du JWT dans le header Authorization.
  */
 @Component
-@RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
+
+    public JwtFilter(JwtProvider jwtProvider) {
+        this.jwtProvider = jwtProvider;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -30,11 +32,18 @@ public class JwtFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
+        // 🔹 Ignore les preflight CORS (OPTIONS) — ne jamais exiger de JWT dessus
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         // 🔹 Ignore les endpoints publics (authentification + téléchargement sans JWT)
         String path = request.getServletPath();
         if (path.startsWith("/api/auth") ||
             path.startsWith("/api/files/metadata/") ||
-            path.startsWith("/api/files/download/")) {
+            path.startsWith("/api/files/download/") ||
+            path.equals("/api/files/upload/anonymous")) {
             filterChain.doFilter(request, response);
             return;
         }

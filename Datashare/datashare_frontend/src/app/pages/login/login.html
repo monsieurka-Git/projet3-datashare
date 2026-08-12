@@ -1,0 +1,29 @@
+<div class="ds-gradient-bg">
+  <app-header-bar></app-header-bar>
+
+  <main class="ds-main">
+    <section class="ds-card">
+      <h1>Connexion</h1>
+      <form (ngSubmit)="onSubmit()">
+        <label>
+          Email
+          <input type="email" [(ngModel)]="form.email" name="email"
+                 placeholder="Saisissez votre email…" required />
+        </label>
+        <label>
+          Mot de passe
+          <input type="password" [(ngModel)]="form.password" name="password"
+                 placeholder="Saisissez votre mot de passe…" required />
+        </label>
+        <p class="ds-error" *ngIf="errorMessage">{{ errorMessage }}</p>
+        <button type="button" class="ds-text-link" (click)="goToRegister()">
+          Créer un compte
+        </button>
+        <button type="submit" class="ds-btn ds-btn--primary" style="margin-top:12px;">
+          Connexion
+        </button>
+      </form>
+    </section>
+  </main>
+  <footer class="ds-footer">Copyright DataShare® 2025</footer>
+</div>

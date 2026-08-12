@@ -1,61 +1,78 @@
 package com.datashare.backend.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import java.time.Instant;
 import java.util.UUID;
 
 /**
- * Entité JPA représentant un fichier uploadé sur la plateforme DataShare.
- * 
- * Évolution des champs pour US02 (téléchargement via lien) :
- * - originalName : nom d'origine du fichier (affiché avant téléchargement)
- * - downloadToken : token unique non prédictible servant de lien de téléchargement
- * - downloadPasswordHash : hash BCrypt du mot de passe (si protégé)
- * - expiresAt : date d'expiration du lien (Instant pour précision)
+ * Entité JPA représentant un fichier uploadé sur DataShare.
  */
 @Entity
 @Table(name = "files")
-@Data
 public class FileEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    /** Nom du fichier stocké sur le serveur (UUID_nomOriginal) */
     @Column(nullable = false)
     private String filename;
 
-    /** Nom original du fichier (avant upload) — utilisé pour l'affichage */
     private String originalName;
 
-    /** Taille du fichier en octets */
     private Long size;
 
-    /** Type MIME du fichier (ex: application/pdf) */
     private String contentType;
 
-    /** Chemin absolu de stockage sur le disque */
     @Column(nullable = false)
     private String storagePath;
 
-    /** Token unique non prédictible pour le téléchargement via lien (US02) */
     @Column(unique = true)
     private String downloadToken;
 
-    /** Hash BCrypt du mot de passe protégeant le téléchargement (nullable si public) */
     private String downloadPasswordHash;
 
-    /** Date d'expiration du lien de téléchargement (Instant pour compatibilité avec les comparaisons) */
     private Instant expiresAt;
 
-    /** Date de création du fichier sur le serveur */
     private Instant createdAt = Instant.now();
 
-    /** UUID du propriétaire du fichier */
     private UUID ownerId;
 
-    /** Tags optionnels pour catégoriser le fichier */
     private String tags;
+
+    public UUID getId() { return id; }
+    public void setId(UUID id) { this.id = id; }
+
+    public String getFilename() { return filename; }
+    public void setFilename(String filename) { this.filename = filename; }
+
+    public String getOriginalName() { return originalName; }
+    public void setOriginalName(String originalName) { this.originalName = originalName; }
+
+    public Long getSize() { return size; }
+    public void setSize(Long size) { this.size = size; }
+
+    public String getContentType() { return contentType; }
+    public void setContentType(String contentType) { this.contentType = contentType; }
+
+    public String getStoragePath() { return storagePath; }
+    public void setStoragePath(String storagePath) { this.storagePath = storagePath; }
+
+    public String getDownloadToken() { return downloadToken; }
+    public void setDownloadToken(String downloadToken) { this.downloadToken = downloadToken; }
+
+    public String getDownloadPasswordHash() { return downloadPasswordHash; }
+    public void setDownloadPasswordHash(String downloadPasswordHash) { this.downloadPasswordHash = downloadPasswordHash; }
+
+    public Instant getExpiresAt() { return expiresAt; }
+    public void setExpiresAt(Instant expiresAt) { this.expiresAt = expiresAt; }
+
+    public Instant getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
+
+    public UUID getOwnerId() { return ownerId; }
+    public void setOwnerId(UUID ownerId) { this.ownerId = ownerId; }
+
+    public String getTags() { return tags; }
+    public void setTags(String tags) { this.tags = tags; }
 }

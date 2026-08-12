@@ -1,0 +1,81 @@
+.ds-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 28px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  pointer-events: none;
+}
+
+.ds-topbar__brand,
+.ds-topbar__actions,
+.ds-topbar__actions a,
+.ds-topbar__actions button {
+  pointer-events: auto;
+}
+
+.ds-topbar__brand {
+  font-family: "DM Sans", "Segoe UI", system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  color: #1f1f1f;
+  text-decoration: none;
+}
+
+.ds-topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ds-topbar__link {
+  font-size: 14px;
+  color: #1f1f1f;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 999px;
+}
+
+.ds-topbar__link:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.ds-topbar__link--accent {
+  font-weight: 600;
+  color: #c94a2e;
+}
+
+.ds-topbar__btn {
+  background: #2a2a2a;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.ds-topbar__btn:hover {
+  background: #111;
+}
+
+.ds-topbar__btn--link {
+  text-decoration: none;
+}
+
+@media (max-width: 640px) {
+  .ds-topbar {
+    padding: 12px 16px;
+  }
+  .ds-topbar__link {
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+}

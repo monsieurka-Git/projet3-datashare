@@ -2,8 +2,6 @@ package com.datashare.backend.controller;
 
 import com.datashare.backend.dto.FileHistoryResponse;
 import com.datashare.backend.service.FileHistoryService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -24,13 +22,17 @@ import java.util.UUID;
  *    Cliquer sur "Authorize" et coller le token JWT
  *    Utiliser l'endpoint GET /api/files/history
  */
-@Slf4j
 @RestController
 @RequestMapping("/api/files")
-@RequiredArgsConstructor
 public class FileHistoryController {
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FileHistoryController.class);
+
     private final FileHistoryService fileHistoryService;
+
+    public FileHistoryController(FileHistoryService fileHistoryService) {
+        this.fileHistoryService = fileHistoryService;
+    }
 
     /**
      * US05 — Consultation de l'historique des fichiers de l'utilisateur connecté.
