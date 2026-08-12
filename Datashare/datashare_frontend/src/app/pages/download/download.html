@@ -1,0 +1,64 @@
+<div class="ds-gradient-bg">
+  <app-header-bar></app-header-bar>
+  <main class="ds-main">
+    <section class="ds-card ds-download-card">
+      <h1>Télécharger un fichier</h1>
+
+      <!-- Chargement -->
+      <div *ngIf="isLoading" class="ds-download-status">
+        Chargement des informations...
+      </div>
+
+      <!-- Métadonnées du fichier (US02) -->
+      <div *ngIf="fileMetadata && !isLoading" class="ds-download-info">
+        <div class="ds-download-file">
+          {{ fileMetadata.originalName }}
+        </div>
+
+        <div class="ds-download-meta">
+          <div><strong>Taille :</strong> {{ fileMetadata.size / 1024 | number:'1.0-2' }} Ko</div>
+          <div><strong>Type :</strong> {{ fileMetadata.contentType }}</div>
+          <div *ngIf="fileMetadata.expiresAt">
+            <strong>Expiration :</strong> {{ fileMetadata.expiresAt | date:'dd/MM/yyyy HH:mm' }}
+          </div>
+          <div *ngIf="fileMetadata.passwordProtected">
+            <strong>🔒 Fichier protégé par mot de passe</strong>
+          </div>
+        </div>
+
+        <!-- Champ mot de passe (si protégé) -->
+        <label class="ds-download-label" *ngIf="fileMetadata.passwordProtected">
+          Mot de passe
+          <input
+            type="password"
+            [(ngModel)]="password"
+            class="ds-input"
+          />
+        </label>
+
+        <!-- Bouton Télécharger -->
+        <button
+          class="ds-btn ds-btn--primary"
+          (click)="onDownload()"
+          [disabled]="isDownloading"
+        >
+          {{ isDownloading ? 'Téléchargement...' : 'Télécharger' }}
+        </button>
+      </div>
+
+      <!-- Message d'erreur (lien invalide/expiré) -->
+      <div *ngIf="!fileMetadata && !isLoading && statusMessage" class="ds-error">
+        {{ statusMessage }}
+      </div>
+
+      <!-- Message de statut -->
+      <p class="ds-download-status" *ngIf="statusMessage && fileMetadata">
+        {{ statusMessage }}
+      </p>
+    </section>
+  </main>
+
+  <footer class="ds-footer">
+    Copyright DataShare 2023
+  </footer>
+</div>

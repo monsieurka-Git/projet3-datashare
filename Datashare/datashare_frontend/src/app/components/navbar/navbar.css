@@ -1,0 +1,23 @@
+.ds-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 28px;
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 20;
+}
+.ds-topbar__brand {
+  font-weight: 700; font-size: 22px; color: #1f1f1f; text-decoration: none;
+}
+.ds-topbar__actions { display: flex; align-items: center; gap: 10px; }
+.ds-topbar__link {
+  font-size: 14px; color: #1f1f1f; text-decoration: none;
+  padding: 8px 12px; border-radius: 999px;
+}
+.ds-topbar__link--accent { font-weight: 600; color: #c94a2e; }
+.ds-topbar__btn {
+  background: #2a2a2a; color: #fff; border: none; border-radius: 999px;
+  padding: 8px 16px; font-size: 13px; cursor: pointer;
+}
+.ds-topbar__btn:hover { background: #111; }

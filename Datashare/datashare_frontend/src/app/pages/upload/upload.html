@@ -1,0 +1,71 @@
+<div class="ds-gradient-bg">
+  <app-header-bar [showAddFiles]="isAuthenticated"></app-header-bar>
+  <main class="ds-main">
+    <section class="ds-card ds-upload-card">
+      <h1>{{ isAuthenticated ? 'Ajouter un fichier' : 'Partager un fichier' }}</h1>
+      <p class="ds-upload-subtitle" *ngIf="!isAuthenticated">
+        Mode anonyme — le fichier ne sera pas conservé dans un historique.
+      </p>
+
+      <div class="ds-upload-file">
+        <div class="ds-upload-file__name">
+          {{ selectedFileName || 'Aucun fichier sélectionné' }}
+        </div>
+        <button type="button" class="ds-link-btn" (click)="fileInput.click()">
+          {{ selectedFileName ? 'Changer' : 'Parcourir' }}
+        </button>
+      </div>
+
+      <input #fileInput type="file" (change)="onFileSelected($event)" style="display: none;" />
+
+      <p class="ds-upload-hint">Taille max. 1 Go — formats interdits : .exe, .bat, .cmd, .js, .jar, .sh…</p>
+
+      <div class="ds-upload-options">
+        <!-- US10 — Expiration (1–7 jours, défaut 7) -->
+        <label class="ds-upload-label">
+          Expiration (jours) — optionnel, défaut 7
+          <input type="number" [(ngModel)]="expirationDays" min="1" max="7" class="ds-input" />
+        </label>
+
+        <!-- US09 — Mot de passe optionnel ≥ 6 caractères -->
+        <label class="ds-upload-label">
+          Mot de passe (optionnel, min. 6 caractères)
+          <input type="password" [(ngModel)]="password" class="ds-input" minlength="6"
+                 placeholder="Laisser vide si public" />
+        </label>
+
+        <!-- US08 — Tags réservés aux utilisateurs connectés -->
+        <label class="ds-upload-label" *ngIf="isAuthenticated">
+          Tags (optionnel, séparés par des virgules, max 30 car. chacun)
+          <input type="text" [(ngModel)]="tags" class="ds-input"
+                 placeholder="ex: travail, urgent, contrat" />
+        </label>
+      </div>
+
+      <button type="button" class="ds-btn ds-btn--primary" (click)="onUpload()" [disabled]="isUploading">
+        {{ isUploading ? 'Téléversement en cours...' : 'Téléverser' }}
+      </button>
+
+      <p class="ds-upload-status" *ngIf="statusMessage">
+        {{ statusMessage }}
+      </p>
+
+      <div *ngIf="downloadUrl" class="ds-download-link" style="margin-top:20px;padding:16px;background:#ecfdf5;border:2px solid #10b981;border-radius:12px;">
+        <p class="ds-download-link__title" style="margin:0 0 10px 0;font-weight:700;color:#065f46;">
+          🔗 Lien de téléchargement à partager :
+        </p>
+        <div class="ds-download-link__row" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
+          <a [href]="downloadUrl" target="_blank" class="ds-download-link__url"
+             style="flex:1;min-width:0;word-break:break-all;color:#047857;font-size:13px;">
+            {{ downloadUrl }}
+          </a>
+          <button type="button" class="ds-btn ds-btn--secondary ds-copy-btn" (click)="copyLink()" style="white-space:nowrap;">
+            {{ linkCopied ? '✅ Copié !' : 'Copier le lien' }}
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="ds-footer">Copyright DataShare® 2025</footer>
+</div>

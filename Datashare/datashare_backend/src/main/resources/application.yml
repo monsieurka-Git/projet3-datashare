@@ -22,8 +22,8 @@ spring:
   servlet:
     multipart:
       enabled: true               # Active le support multipart
-      max-file-size: 10MB         # Taille max d'un fichier (défaut 1MB)
-      max-request-size: 10MB       # Taille max de la requête totale
+      max-file-size: 1024MB       # Taille max d'un fichier : 1 Go (conformité US01)
+      max-request-size: 1024MB    # Taille max de la requête totale (1 Go)
 
 security:
   jwt:

@@ -1,0 +1,29 @@
+<header class="ds-topbar">
+  <a class="ds-topbar__brand" [routerLink]="isLoggedIn ? '/home' : '/welcome'">
+    DataShare
+  </a>
+
+  <div class="ds-topbar__actions">
+    <!-- Connecté -->
+    <ng-container *ngIf="isLoggedIn">
+      <a class="ds-topbar__link" routerLink="/home">Mes fichiers</a>
+      <a
+        *ngIf="showAddFiles"
+        class="ds-topbar__link ds-topbar__link--accent"
+        routerLink="/upload"
+      >
+        + Ajouter des fichiers
+      </a>
+      <button type="button" class="ds-topbar__btn" (click)="onLogout()">
+        Se déconnecter
+      </button>
+    </ng-container>
+
+    <!-- Non connecté -->
+    <ng-container *ngIf="!isLoggedIn">
+      <a class="ds-topbar__btn ds-topbar__btn--link" routerLink="/login">
+        Se connecter
+      </a>
+    </ng-container>
+  </div>
+</header>

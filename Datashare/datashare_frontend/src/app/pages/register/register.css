@@ -1,0 +1,13 @@
+.ds-text-link {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background: none;
+  border: none;
+  color: #e25b3b;
+  font-size: 13px;
+  cursor: pointer;
+  margin: 4px 0 8px;
+  text-decoration: underline;
+}
+.ds-success { color: #047857; font-size: 13px; }

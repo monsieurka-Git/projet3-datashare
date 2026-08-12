@@ -1,0 +1,113 @@
+<div class="ds-home-page">
+  <app-header-bar [showAddFiles]="true"></app-header-bar>
+
+  <div class="ds-home-shell">
+    <!-- Colonne gauche (dégradé) -->
+    <aside class="ds-home-side">
+      <div class="ds-side-nav">
+        <button type="button" class="ds-side-item active">Mes fichiers</button>
+      </div>
+      <div class="ds-side-footer">Copyright DataShare® 2025</div>
+    </aside>
+
+    <!-- Colonne droite (liste) -->
+    <section class="ds-home-main">
+      <div class="ds-files-header">
+        <h1>Mes fichiers</h1>
+        <div class="ds-tabs">
+          <button
+            type="button"
+            class="ds-tab"
+            [class.active]="activeTab === 'Tous'"
+            (click)="selectTab('Tous')"
+          >Tous</button>
+          <button
+            type="button"
+            class="ds-tab"
+            [class.active]="activeTab === 'Actifs'"
+            (click)="selectTab('Actifs')"
+          >Actifs</button>
+          <button
+            type="button"
+            class="ds-tab"
+            [class.active]="activeTab === 'Expirés'"
+            (click)="selectTab('Expirés')"
+          >Expiré</button>
+        </div>
+      </div>
+
+      <!-- Chargement -->
+      <div *ngIf="isLoading" class="ds-empty">
+        Chargement de vos fichiers…
+      </div>
+
+      <!-- Erreur API -->
+      <div *ngIf="!isLoading && loadError" class="ds-empty" style="border-color:#f5a;">
+        <p style="color:#b00020;margin:0 0 12px;">{{ loadError }}</p>
+        <button type="button" class="ds-chip-btn ds-chip-btn--primary" (click)="refreshFiles()">
+          Réessayer
+        </button>
+      </div>
+
+      <!-- Liste vide (chargement OK, aucun fichier pour ce compte) -->
+      <div *ngIf="!isLoading && !loadError && files.length === 0" class="ds-empty">
+        <p style="margin:0 0 8px;">Vous n'avez encore téléversé aucun fichier avec ce compte.</p>
+        <p style="margin:0;font-size:0.9rem;opacity:0.75;">
+          Les uploads anonymes (sans connexion) n'apparaissent pas ici.
+          Utilisez « + Ajouter des fichiers » une fois connecté.
+        </p>
+      </div>
+
+      <!-- Filtre actif sans résultat -->
+      <div *ngIf="!isLoading && !loadError && files.length > 0 && displayedFiles.length === 0" class="ds-empty">
+        Aucun fichier pour cet onglet / filtre.
+      </div>
+
+      <div class="ds-files-list" *ngIf="!isLoading && !loadError && displayedFiles.length > 0">
+        <div class="ds-file-row" *ngFor="let file of displayedFiles">
+          <div class="ds-file-info">
+            <div class="ds-file-name">📄 {{ file.originalName || file.filename }}</div>
+            <div class="ds-file-meta">
+              <span *ngIf="file.expiresAt">Expire le {{ file.expiresAt | date:'dd/MM/yyyy' }}</span>
+              <span *ngIf="!file.expiresAt">Pas d'expiration</span>
+              <span *ngIf="isExpired(file)" class="ds-expired-label"> · Expiré</span>
+            </div>
+          </div>
+
+          <div class="ds-file-actions">
+            <button
+              type="button"
+              class="ds-chip-btn"
+              title="Copier le lien"
+              [disabled]="!file.downloadToken"
+              (click)="copyLink(file)"
+            >🔗</button>
+
+            <button
+              type="button"
+              class="ds-chip-btn ds-chip-btn--danger"
+              (click)="confirmDelete(file)"
+            >Supprimer</button>
+
+            <button
+              type="button"
+              class="ds-chip-btn ds-chip-btn--primary"
+              [disabled]="!file.downloadToken"
+              (click)="onAccess(file)"
+            >Accéder →</button>
+          </div>
+        </div>
+      </div>
+
+      <p class="ds-copy-feedback" *ngIf="copiedId">Lien copié dans le presse-papiers</p>
+    </section>
+  </div>
+
+  <app-modal
+    [visible]="showDeleteModal"
+    title="Confirmer la suppression"
+    [message]="'Voulez-vous vraiment supprimer ce fichier ? Cette action est irréversible.'"
+    (close)="onDeleteCancel()"
+    (confirm)="onDeleteConfirm()"
+  ></app-modal>
+</div>
