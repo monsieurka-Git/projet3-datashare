@@ -210,9 +210,14 @@ npm run e2e:coverage      # E2E + rapport NYC → coverage-e2e/
 | Cypress / NYC | `datashare_frontend/coverage-e2e/index.html` |
 
 > Joindre une capture des rapports de couverture au dossier de livrable de formation.
-![alt text](image-2.png)
-![alt text](image-3.png)
-![alt text](image-1.png)
+### Rapport JaCoCo `datashare_backend/target/site/jacoco/index.html`
+<img width="1342" height="373" alt="image-2" src="https://github.com/user-attachments/assets/afbd19c5-bd92-4d7f-998c-baf45ad2f206" />
+
+### Rapport Cypress `datashare_frontend/coverage-e2e/index.html`
+<img width="1903" height="909" alt="image-3" src="https://github.com/user-attachments/assets/19e178c7-6ab6-47ab-a295-81d8e53849c1" />
+
+### Rapport dans `coverage-e2e/` (parcours US)
+<img width="1025" height="509" alt="image-1" src="https://github.com/user-attachments/assets/903d89e2-3551-47f7-a243-fe9d2a95a8f7" />
 
 ---
 
