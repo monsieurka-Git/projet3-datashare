@@ -61,16 +61,53 @@ Voir `docs/` pour le détail (architecture, sécurité, tests, perf, maintenance
 ### 1. Base de données
 
 ```bash
-# Option A — script SQL
-psql -U postgres -f scripts/init-db.sql
+# Option A — Installation PostgreSQL
+Installation de PostgreSQL 18.4
+2.1 Téléchargement
+PostgreSQL a été téléchargé depuis le site officiel :
+code
+https://www.postgresql.org/download/
+Version installée : PostgreSQL 18.4  
+Composants inclus :
+PostgreSQL Server 18.4
+pgAdmin 4
+StackBuilder (optionnel)
 
-# Option B — Docker Compose
-docker compose -f scripts/docker-compose.yml up -d
+
 ```
 
 ### 2. Backend
 
 ```bash
+Génération des sources Backend sur https://start.spring.io/?utm_source=copilot.com
+---------------------------------------------------------
+ SPRING INITIALIZR – Configuration du backend DataShare
+---------------------------------------------------------
+
+Project:        Maven Project
+Language:       Java
+Spring Boot:    3.2.x
+
+Project Metadata:
+  Group:        com.datashare
+  Artifact:     backend
+  Name:         datashare_backend
+  Description:  Backend API REST pour l’application DataShare
+  Package:      com.datashare.backend
+  Packaging:    Jar
+  Java:         17
+
+Dependencies sélectionnées :
+  ✔ Spring Web
+  ✔ Spring Boot DevTools
+  ✔ Spring Security
+  ✔ Spring Data JPA
+  ✔ PostgreSQL Driver
+  ✔ Validation
+  ✔ Lombok
+
+---------------------------------------------------------
+
 cd datashare_backend
 # Adapter src/main/resources/application.yml si besoin
 ./mvnw spring-boot:run
@@ -79,10 +116,34 @@ cd datashare_backend
 
 ### 3. Frontend
 
+### 1.Installation de l’environnement Angular
+Avant de créer le projet, l’environnement de développement a été installé :
+
+### 2.Installation de Node.js
+Version recommandée : Node 18+
+
+### 3.Installation de l’Angular CLI
+```bash
+npm install -g @angular/cli
+```
+Vérification :
+
+```bash
+ng version
+```
+### 4.Création du projet Angular DataShare
+Le frontend a été initialisé via Angular CLI avec la commande :
+
+```bash
+ng new datashare-frontend
+```
+
 ```bash
 cd datashare_frontend
 npm install
 npm start
+```
+
 # App : http://localhost:4200
 ```
 

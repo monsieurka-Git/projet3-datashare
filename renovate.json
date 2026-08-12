@@ -1,0 +1,18 @@
+{
+  "extends": ["config:base"],
+  "labels": ["dependencies"],
+  "timezone": "Europe/Paris",
+  "schedule": ["after 8am and before 6pm every weekday"],
+  "packageRules": [
+    {
+      "matchManagers": ["npm"],
+      "matchPaths": ["datashare_frontend/**"],
+      "groupName": "Frontend dependencies"
+    },
+    {
+      "matchManagers": ["maven"],
+      "matchPaths": ["datashare_backend/**"],
+      "groupName": "Backend dependencies"
+    }
+  ]
+}
