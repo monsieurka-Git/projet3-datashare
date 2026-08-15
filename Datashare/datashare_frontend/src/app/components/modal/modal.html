@@ -1,0 +1,11 @@
+<div *ngIf="visible" class="modal-backdrop" (click)="onClose()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <h2>{{ title }}</h2>
+    <p>{{ message }}</p>
+
+    <div class="modal__actions">
+      <button type="button" class="modal-btn modal-btn--cancel" (click)="onClose()">Annuler</button>
+      <button type="button" class="modal-btn modal-btn--confirm" (click)="onConfirm($event)">Confirmer</button>
+    </div>
+  </div>
+</div>

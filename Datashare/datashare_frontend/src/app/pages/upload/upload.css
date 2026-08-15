@@ -1,0 +1,135 @@
+.ds-upload-card h1 {
+  margin-bottom: 24px;
+  font-size: 20px;
+}
+
+.ds-upload-file {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.ds-upload-file__name {
+  font-size: 14px;
+}
+
+.ds-link-btn {
+  border: none;
+  background: none;
+  color: #e25b3b;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.ds-upload-meta {
+  display: flex;
+  justify-content: space-between;
+  margin: 16px 0;
+}
+
+.ds-upload-label {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.ds-upload-value {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.ds-upload-status {
+  margin-top: 12px;
+  font-size: 13px;
+}
+
+/* US01 — Options avancées */
+.ds-upload-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 16px 0;
+  text-align: left;
+}
+
+.ds-upload-options .ds-upload-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: #374151;
+}
+
+.ds-input {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+}
+
+/* 🔥 Bloc d'affichage du lien de téléchargement après upload */
+.ds-download-link {
+  margin-top: 16px;
+  padding: 12px;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.ds-download-link__title {
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  color: #374151;
+  font-weight: 600;
+}
+
+.ds-download-link__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ds-download-link__url {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 13px;
+  color: #e25b3b;
+  word-break: break-all;
+  text-decoration: none;
+}
+
+.ds-download-link__url:hover {
+  text-decoration: underline;
+}
+
+/* Bouton secondaire (utilisé pour "Copier le lien") */
+.ds-btn--secondary {
+  background-color: #ffffff;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.ds-btn--secondary:hover {
+  background-color: #f3f4f6;
+}
+
+.ds-copy-btn {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.ds-upload-hint {
+  margin: 8px 0 4px;
+  font-size: 12px;
+  color: #6b7280;
+  text-align: left;
+}
+
+.ds-upload-subtitle {
+  margin: -8px 0 16px;
+  font-size: 13px;
+  color: #6b7280;
+  text-align: left;
+}

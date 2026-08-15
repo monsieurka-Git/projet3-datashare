@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "setup": "integrated",
+  "languages": [
+    "JavaScript/TypeScript",
+    "TypeScript"
+  ],
+  "stacks": [
+    "Node.js",
+    "TypeScript"
+  ],
+  "markers": [
+    "package.json",
+    "tsconfig.json"
+  ],
+  "packageName": "datashare-frontend",
+  "suggestedRun": "npm start",
+  "suggestedTest": "npm test",
+  "createdAt": "2026-08-10T17:53:13.632Z",
+  "tool": "xgrok"
+}

@@ -1,0 +1,19 @@
+{
+  "all": true,
+  "include": [
+    "src/app/**/*.ts"
+  ],
+  "exclude": [
+    "**/*.spec.ts",
+    "**/*.module.ts",
+    "**/main.ts",
+    "**/index.ts",
+    "**/environments/**"
+  ],
+  "reporter": ["html", "text", "lcov"],
+  "report-dir": "coverage-e2e",
+  "temp-dir": ".nyc_output",
+  "check-coverage": false,
+  "sourceMap": true,
+  "instrument": false
+}

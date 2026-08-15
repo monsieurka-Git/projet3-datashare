@@ -1,4 +1,7 @@
-import { Service } from '@angular/core';
+// Service API générique (base pour les appels HTTP)
+import { Injectable } from '@angular/core';
 
-@Service()
+@Injectable({
+  providedIn: 'root'
+})
 export class Api {}

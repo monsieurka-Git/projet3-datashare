@@ -1,0 +1,9 @@
+.app-root {
+  min-height: 100vh;
+  background: transparent;
+}
+
+.app-content {
+  min-height: 100vh;
+  padding: 0;
+}

@@ -1,0 +1,19 @@
+<!-- En-tête commun à toutes les pages DataShare -->
+
+<header class="ds-header">
+  <!-- Logo / nom de l'application -->
+  <div class="ds-header__brand">DataShare</div>
+
+  <!-- Actions à droite -->
+  <div class="ds-header__actions">
+    <button *ngIf="showImport" class="ds-btn ds-btn--secondary">
+      Importer des fichiers
+    </button>
+
+    <a *ngIf="showDocs" class="ds-link">Documentation</a>
+
+    <button *ngIf="showLogin" class="ds-btn ds-btn--primary">
+      Se connecter
+    </button>
+  </div>
+</header>

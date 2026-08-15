@@ -11,18 +11,22 @@ import com.datashare.backend.dto.AuthResponse;
 import com.datashare.backend.model.User;
 import com.datashare.backend.repository.UserRepository;
 
-import lombok.RequiredArgsConstructor;
 
 /**
  * Service gérant l'inscription (US03) et la connexion (US04).
  */
 @Service
-@RequiredArgsConstructor
 public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtProvider jwtProvider) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtProvider = jwtProvider;
+    }
 
     /**
      * US03 — Création de compte.

@@ -1,0 +1,50 @@
+.ds-landing-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+/* Bouton cloud Figma : anneau semi-transparent + disque sombre */
+.ds-cloud-btn {
+  position: relative;
+  width: 144px;
+  height: 144px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ds-cloud-btn__ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(47, 25, 13, 0.15);
+}
+
+.ds-cloud-btn__core {
+  position: relative;
+  z-index: 1;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.ds-cloud-btn:hover .ds-cloud-btn__core {
+  transform: scale(1.05);
+  background: #111;
+}
+
+.ds-cloud-btn:active .ds-cloud-btn__core {
+  transform: scale(0.97);
+}

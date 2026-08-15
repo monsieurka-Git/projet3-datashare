@@ -1,0 +1,52 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":dependencyDashboard",
+    ":semanticCommits",
+    ":separateMajorReleases"
+  ],
+  "timezone": "Europe/Paris",
+  "schedule": ["before 9am on monday"],
+  "labels": ["dependencies"],
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 3,
+  "rangeStrategy": "bump",
+  "packageRules": [
+    {
+      "description": "Group Angular packages",
+      "matchPackagePatterns": ["^@angular/"],
+      "groupName": "angular",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "description": "Group Spring ecosystem",
+      "matchPackagePatterns": ["^org\\.springframework", "^org\\.springframework\\.boot"],
+      "groupName": "spring",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "description": "DevDependencies frontend — review required",
+      "matchManagers": ["npm"],
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["patch"],
+      "automerge": false
+    },
+    {
+      "description": "Major Angular / Spring — manual review",
+      "matchPackagePatterns": ["^@angular/", "^org\\.springframework"],
+      "matchUpdateTypes": ["major"],
+      "labels": ["dependencies", "major", "needs-review"]
+    }
+  ],
+  "maven": {
+    "enabled": true
+  },
+  "npm": {
+    "enabled": true
+  },
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security"]
+  }
+}

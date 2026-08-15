@@ -1,0 +1,9 @@
+<!-- Conservé pour compatibilité : délègue au header global -->
+<header class="ds-topbar">
+  <a class="ds-topbar__brand" routerLink="/home">DataShare</a>
+  <div class="ds-topbar__actions">
+    <a class="ds-topbar__link" routerLink="/home">Mes fichiers</a>
+    <a class="ds-topbar__link ds-topbar__link--accent" routerLink="/upload">+ Ajouter des fichiers</a>
+    <button type="button" class="ds-topbar__btn" (click)="onLogout()">Se déconnecter</button>
+  </div>
+</header>

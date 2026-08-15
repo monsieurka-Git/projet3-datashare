@@ -1,25 +1,32 @@
 package com.datashare.backend.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
-import java.util.List;
 import java.util.UUID;
 
-/**
- * Réponse renvoyée après un login réussi.
- * Contient le JWT et les informations minimales de l'utilisateur.
- */
-@Data
-@AllArgsConstructor
 public class AuthResponse {
-    private String token;        // JWT
-    private String type;         // "Bearer"
-    private long expiresIn;      // durée de validité en ms
-    private UUID userId;         // id utilisateur
-    private String email;        // email utilisateur
-    // Champ supprimé : le rôle n'est plus utilisé dans DataShare.
-// AuthResponse ne contient plus que les infos nécessaires à la connexion (token, email, etc.)
+    private String token;
+    private String type;
+    private long expiresIn;
+    private UUID userId;
+    private String email;
 
+    public AuthResponse() {}
 
+    public AuthResponse(String token, String type, long expiresIn, UUID userId, String email) {
+        this.token = token;
+        this.type = type;
+        this.expiresIn = expiresIn;
+        this.userId = userId;
+        this.email = email;
+    }
+
+    public String getToken() { return token; }
+    public void setToken(String token) { this.token = token; }
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
+    public long getExpiresIn() { return expiresIn; }
+    public void setExpiresIn(long expiresIn) { this.expiresIn = expiresIn; }
+    public UUID getUserId() { return userId; }
+    public void setUserId(UUID userId) { this.userId = userId; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 }

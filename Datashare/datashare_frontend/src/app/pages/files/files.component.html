@@ -1,0 +1,78 @@
+<div class="container mt-4">
+  <h2>Mes Fichiers</h2>
+
+  <!-- Bloc 1 : Spinner affiché pendant la phase de chargement HTTP -->
+  <div *ngIf="loading" class="text-center my-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+  </div>
+
+  <!-- Bloc 2 : Message d'erreur si la requête au serveur échoue -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Bloc 3 : Message d'information si le chargement est terminé mais qu'aucun fichier n'existe -->
+  <div *ngIf="!loading && files.length === 0" class="alert alert-info">
+    Vous n'avez encore téléversé aucun fichier.
+  </div>
+
+  <!-- Bloc 4 : Tableau d'affichage lorsque des fichiers sont disponibles -->
+  <div *ngIf="!loading && files.length > 0" class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th>Nom du fichier</th>
+          <th>Taille</th>
+          <th>Type</th>
+          <th>Date d'ajout</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Boucle Angular pour parcourir chaque fichier de la liste -->
+        <tr *ngFor="let file of files">
+          
+          <!-- Nom d'origine du fichier -->
+          <td>
+            <strong>{{ file.originalName }}</strong>
+          </td>
+
+          <!-- Conversion de la taille d'octets vers Kilo-octets (Ko) -->
+          <td>
+            {{ (file.size / 1024).toFixed(1) }} Ko
+          </td>
+
+          <!-- Type MIME du fichier -->
+          <td>
+            <span class="badge bg-secondary">{{ file.contentType }}</span>
+          </td>
+
+          <!-- Formatage de la date serveur au format lisible JJ/MM/AAAA HH:mm -->
+          <td>
+            {{ file.createdAt | date:'dd/MM/yyyy HH:mm' }}
+          </td>
+
+          <!-- Boutons d'actions -->
+          <td>
+            <!-- 🐛 FIX : bouton manquant pour récupérer le lien de partage du fichier -->
+            <button
+              (click)="copyLink(file)"
+              class="btn btn-sm btn-outline-primary me-2"
+              [disabled]="!file.downloadToken"
+            >
+              {{ copiedFileId === file.id ? 'Lien copié !' : 'Copier le lien' }}
+            </button>
+
+            <!-- Bouton déclenchant la suppression du fichier par son id -->
+            <button (click)="deleteFile(file.id)" class="btn btn-sm btn-outline-danger">
+              Supprimer
+            </button>
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,1 +1,189 @@
-/* You can add global styles to this file, and also import other style files */
+/* DataShare — styles globaux (maquettes Figma) */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&display=swap');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: "DM Sans", "Segoe UI", system-ui, sans-serif;
+  color: #1f1f1f;
+  background: #1a1816;
+  min-height: 100%;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+}
+
+/* Fond dégradé orange → corail */
+.ds-gradient-bg {
+  min-height: 100vh;
+  background: linear-gradient(165deg, #ffb88c 0%, #e06262 100%);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.ds-main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 80px 24px 48px;
+}
+
+.ds-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 28px 32px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+}
+
+.ds-card h1 {
+  margin: 0 0 20px;
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.ds-footer {
+  padding: 12px 24px 20px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 12px;
+}
+
+/* Boutons */
+.ds-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+}
+
+.ds-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.ds-btn--primary {
+  background: #f5a07a;
+  color: #1f1f1f;
+  width: 100%;
+}
+
+.ds-btn--primary:hover:not(:disabled) {
+  background: #ef8f64;
+}
+
+.ds-btn--secondary {
+  background: #ffffff;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.ds-btn--secondary:hover:not(:disabled) {
+  background: #f3f4f6;
+}
+
+.ds-btn--dark {
+  background: #2a2a2a;
+  color: #fff;
+}
+
+.ds-btn--dark:hover:not(:disabled) {
+  background: #111;
+}
+
+/* Champs */
+.ds-input,
+.ds-card input[type="text"],
+.ds-card input[type="email"],
+.ds-card input[type="password"],
+.ds-card input[type="number"],
+.ds-card select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 14px;
+  background: #fff;
+  outline: none;
+}
+
+.ds-card input:focus,
+.ds-card select:focus,
+.ds-input:focus {
+  border-color: #f5a07a;
+  box-shadow: 0 0 0 3px rgba(245, 160, 122, 0.25);
+}
+
+.ds-card label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: #374151;
+  margin-bottom: 14px;
+  text-align: left;
+}
+
+.ds-error {
+  color: #b91c1c;
+  font-size: 13px;
+  margin: 8px 0;
+}
+
+.ds-link-btn {
+  border: none;
+  background: none;
+  color: #e25b3b;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Cercle upload (landing) */
+.ds-upload-circle {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  border: 3px solid rgba(30, 30, 30, 0.85);
+  background: rgba(30, 30, 30, 0.75);
+  color: #fff;
+  font-size: 28px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 24px auto 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  transition: transform 0.15s, background 0.15s;
+}
+
+.ds-upload-circle:hover {
+  transform: scale(1.05);
+  background: #111;
+}
+
+.ds-hero-title {
+  font-size: 28px;
+  font-weight: 500;
+  color: #1f1f1f;
+  text-align: center;
+  margin: 0;
+}

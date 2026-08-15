@@ -1,0 +1,23 @@
+# DataShare — PostgreSQL local
+# Usage : docker compose -f scripts/docker-compose.yml up -d
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: datashare-postgres
+    environment:
+      POSTGRES_DB: datashare
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - datashare_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d datashare"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  datashare_pg_data:
