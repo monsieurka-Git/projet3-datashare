@@ -1,55 +1,52 @@
 /**
- * Scénario E2E 3 — Suppression d'un fichier (US06)
+ * US06 — Suppression réelle (disque + BDD)
  */
-describe('US06 — Suppression de fichier', () => {
-  beforeEach(() => {
-    cy.clearAllLocalStorage();
-    cy.mockAuthApi();
-    cy.mockFilesApi();      // crée @listFiles, @metadata, @download, @upload, @deleteFile
-    cy.visitHomeAsUser();   // login + redirection vers /home + attend @listFiles
+import { UploadPage } from '../pages/UploadPage';
+
+describe('US06 — Suppression réelle', () => {
+  const uploadPage = new UploadPage();
+  let token = '';
+
+  before(function () {
+    if (Cypress.env('mode') === 'mock') this.skip();
   });
 
-  it('demande confirmation puis supprime le fichier de la liste', () => {
-    // Le fichier mocké dans mockFilesApi doit apparaître
-    cy.contains('rapport.pdf', { timeout: 10000 }).should('be.visible');
-
-    // Bouton supprimer
-    cy.contains('.ds-file-row', 'rapport.pdf')
-      .contains('button', /Supprimer/i)
-      .click();
-
-    // Modale de confirmation
-    cy.contains(/Confirmer la suppression|vraiment supprimer/i).should('be.visible');
-    cy.contains('button', /Confirmer/i).should('be.visible');
-    cy.contains('button', /Annuler/i).should('be.visible');
-
-    // Confirmer
-    cy.contains('button', /Confirmer/i).click();
-
-    // Attendre la requête mockée
-    cy.wait('@deleteFile');
-
-    // La modale doit disparaître
-    cy.contains(/Confirmer la suppression|vraiment supprimer/i).should('not.exist');
-
-    // La liste doit être rechargée
-    cy.wait('@listFiles').then(() => {
-      // Le fichier ne doit plus être présent
-      cy.contains('rapport.pdf').should('not.exist');
+  beforeEach(() => {
+    cy.ensureUser().then((u) => {
+      token = u.token;
     });
   });
 
-  it('annule la suppression via la modale', () => {
-    cy.contains('rapport.pdf', { timeout: 10000 }).should('be.visible');
+  it('upload puis DELETE /api/files/info/{id} puis liste vide ou sans ce fichier', () => {
+    uploadPage.visitWithAuth(token).selectFixture().submit().expectSuccessLink();
 
-    cy.contains('.ds-file-row', 'rapport.pdf')
-      .contains('button', /Supprimer/i)
-      .click();
+    cy.apiUrl().then((base) => {
+      cy.request({
+        method: 'GET',
+        url: `${base}/api/files`,
+        headers: { Authorization: `Bearer ${token}` }
+      }).then((res) => {
+        expect(res.body.length).to.be.greaterThan(0);
+        const id = res.body[0].id;
 
-    // Annuler
-    cy.contains('button', /Annuler/i).click();
+        cy.request({
+          method: 'DELETE',
+          url: `${base}/api/files/info/${id}`,
+          headers: { Authorization: `Bearer ${token}` },
+          failOnStatusCode: false
+        }).then((del) => {
+          expect([200, 204]).to.include(del.status);
+        });
 
-    // Le fichier doit toujours être visible
-    cy.contains('rapport.pdf').should('be.visible');
+        cy.request({
+          method: 'GET',
+          url: `${base}/api/files`,
+          headers: { Authorization: `Bearer ${token}` }
+        }).then((res2) => {
+          const stillThere = (res2.body as any[]).some((f) => f.id === id);
+          expect(stillThere).to.eq(false);
+        });
+      });
+    });
   });
 });

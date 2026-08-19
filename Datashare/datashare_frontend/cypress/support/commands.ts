@@ -3,163 +3,150 @@
 declare global {
   namespace Cypress {
     interface Chainable {
-      /** Seed localStorage avec un faux JWT (dans le contexte de l'app) */
-      loginAs(email?: string, userId?: string): Chainable<void>;
-      /** Intercepte les appels API auth */
+      /** true si mode mock */
+      isMockMode(): Chainable<boolean>;
+      /** URL API backend */
+      apiUrl(): Chainable<string>;
+      /** Inscription (ignore 4xx si déjà existant) */
+      apiRegister(email: string, password?: string): Chainable<void>;
+      /** Login API → stocke JWT + userId dans localStorage navigateur */
+      apiLogin(email: string, password?: string): Chainable<string>;
+      /** Prépare un utilisateur unique et le connecte (localStorage prêt pour cy.visit) */
+      ensureUser(email?: string): Chainable<{ email: string; token: string }>;
+      /** Mocks (mode mock uniquement) */
       mockAuthApi(): Chainable<void>;
-      /** Intercepte les appels API fichiers */
       mockFilesApi(): Chainable<void>;
-      /** Visite /home déjà authentifié + mocks fichiers */
       visitHomeAsUser(): Chainable<void>;
-      /** Réinitialise l'état partagé des fichiers mockés */
-      resetMockFiles(): Chainable<void>;
     }
   }
 }
 
-const FAKE_JWT =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMTExMTExMS0xMTExLTExMTEtMTExMS0xMTExMTExMTExMTEiLCJlbWFpbCI6InVzZXJAZGF0YXNoYXJlLnRlc3QifQ.sig';
-const FAKE_USER_ID = '11111111-1111-1111-1111-111111111111';
+const DEFAULT_PASSWORD = () => Cypress.env('testPassword') || 'password1';
 
-Cypress.Commands.add('loginAs', (email = 'user@datashare.test', userId = FAKE_USER_ID) => {
-  // Important : écrire dans le localStorage de l'origine de l'app
-  cy.window({ log: false }).then((win) => {
-    win.localStorage.setItem('token', FAKE_JWT);
-    win.localStorage.setItem('userId', userId);
+Cypress.Commands.add('isMockMode', () => {
+  return cy.wrap(Cypress.env('mode') === 'mock');
+});
+
+Cypress.Commands.add('apiUrl', () => {
+  return cy.wrap((Cypress.env('apiUrl') as string) || 'http://localhost:8080');
+});
+
+Cypress.Commands.add('apiRegister', (email: string, password?: string) => {
+  const pwd = password || DEFAULT_PASSWORD();
+  cy.apiUrl().then((base) => {
+    cy.request({
+      method: 'POST',
+      url: `${base}/api/auth/register`,
+      body: { email, password: pwd },
+      failOnStatusCode: false
+    }).then((res) => {
+      // 200/201 OK, 400/409 déjà existant → on continue
+      expect([200, 201, 400, 409, 500]).to.include(res.status);
+    });
   });
 });
 
-Cypress.Commands.add('mockAuthApi', () => {
-  cy.intercept('POST', '**/api/auth/register', {
-    statusCode: 200,
-    body: 'Utilisateur créé avec succès'
-  }).as('register');
-
-  cy.intercept('POST', '**/api/auth/login', (req) => {
-    const body = req.body || {};
-    // Simule un échec si mot de passe = "wrong" ou email contient "bad"
-    if (
-      body.password === 'wrong' ||
-      body.password === 'badpassword' ||
-      (typeof body.email === 'string' && body.email.includes('bad@'))
-    ) {
-      req.reply({
-        statusCode: 401,
-        body: { error: 'Email ou mot de passe invalide' }
+Cypress.Commands.add('apiLogin', (email: string, password?: string) => {
+  const pwd = password || DEFAULT_PASSWORD();
+  return cy.apiUrl().then((base) => {
+    return cy
+      .request({
+        method: 'POST',
+        url: `${base}/api/auth/login`,
+        body: { email, password: pwd },
+        failOnStatusCode: false
+      })
+      .then((res) => {
+        expect(res.status, `login ${email}`).to.eq(200);
+        const token = res.body.token as string;
+        const userId = (res.body.userId as string) || '';
+        // IMPORTANT : écrire dans le localStorage du navigateur Cypress (pas window Node)
+        cy.window({ log: false }).then((win) => {
+          win.localStorage.setItem('token', token);
+          if (userId) win.localStorage.setItem('userId', userId);
+        });
+        return cy.wrap(token);
       });
-      return;
-    }
-    req.reply({
-      statusCode: 200,
-      body: {
-        token: FAKE_JWT,
-        type: 'Bearer',
-        expiresIn: 3600000,
-        expiresAt: Date.now() + 3600000,
-        userId: FAKE_USER_ID,
-        email: body.email || 'user@datashare.test'
-      }
-    });
+  });
+});
+
+Cypress.Commands.add('ensureUser', (email?: string) => {
+  const mail = email || `e2e_${Date.now()}_${Cypress._.random(1000, 9999)}@datashare.test`;
+  cy.apiRegister(mail);
+  return cy.apiLogin(mail).then((token) => {
+    return cy.wrap({ email: mail, token: token as unknown as string });
+  });
+});
+
+/* ---------- Mode MOCK (optionnel) ---------- */
+
+const FAKE_JWT =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMTExMTExMS0xMTExLTExMTEtMTExMS0xMTExMTExMTExMTEifQ.e2e';
+const FAKE_USER = '11111111-1111-1111-1111-111111111111';
+const MOCK_FILE = {
+  id: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
+  filename: 'uuid_rapport.pdf',
+  originalName: 'rapport.pdf',
+  size: 2048,
+  contentType: 'application/pdf',
+  createdAt: new Date().toISOString(),
+  expiresAt: new Date(Date.now() + 7 * 86400000).toISOString(),
+  ownerId: FAKE_USER,
+  downloadToken: 'download-token-e2e-1234',
+  tags: 'test'
+};
+
+Cypress.Commands.add('mockAuthApi', () => {
+  cy.intercept('POST', '**/api/auth/register', { statusCode: 200, body: 'OK' }).as('register');
+  cy.intercept('POST', '**/api/auth/login', {
+    statusCode: 200,
+    body: { token: FAKE_JWT, type: 'Bearer', userId: FAKE_USER, email: 'user@datashare.test' }
   }).as('login');
 });
 
 Cypress.Commands.add('mockFilesApi', () => {
-  const fileId = 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee';
-  const token = 'download-token-e2e-1234';
-
-  // État partagé pour la liste des fichiers (permet la suppression)
-  let files = [
-    {
-      id: fileId,
-      filename: 'uuid_rapport.pdf',
-      originalName: 'rapport.pdf',
-      size: 2048,
-      contentType: 'application/pdf',
-      createdAt: new Date().toISOString(),
-      expiresAt: new Date(Date.now() + 7 * 86400000).toISOString(),
-      ownerId: FAKE_USER_ID,
-      downloadToken: token,
-      tags: 'travail,urgent'
-    }
-  ];
-
-  // GET liste — retourne l'état courant
-  cy.intercept(
-    { method: 'GET', url: /\/api\/files\/?(\?.*)?$/ },
-    (req) => {
-      req.reply({ statusCode: 200, body: [...files] });
-    }
-  ).as('listFiles');
-
-  // DELETE suppression — met à jour l'état
-  cy.intercept('DELETE', '**/api/files/info/**', (req) => {
-    const match = req.url.match(/\/api\/files\/info\/([^/?#]+)/);
-    const idToDelete = match ? match[1] : null;
-    if (idToDelete) {
-      files = files.filter(f => f.id !== idToDelete);
-    }
-    req.reply({ statusCode: 204 });
-  }).as('deleteFile');
-
-  cy.intercept('POST', '**/api/files/upload/anonymous', {
-    statusCode: 200,
-    body: {
-      id: fileId,
-      filename: 'uuid_anon.txt',
-      originalName: 'anon.txt',
-      downloadToken: token,
-      downloadUrl: `/download/${token}`
-    }
-  }).as('uploadAnonymous');
-
-  cy.intercept('POST', '**/api/files/upload', {
-    statusCode: 200,
-    body: {
-      id: fileId,
-      filename: 'uuid_rapport.pdf',
-      originalName: 'rapport.pdf',
-      downloadToken: token,
-      downloadUrl: `/download/${token}`
-    }
-  }).as('upload');
-
+  cy.intercept('GET', '**/api/files/history', { statusCode: 200, body: [MOCK_FILE] }).as('history');
+  cy.intercept('GET', '**/api/files', { statusCode: 200, body: [MOCK_FILE] }).as('listFiles');
   cy.intercept('GET', '**/api/files/metadata/**', {
     statusCode: 200,
     body: {
       originalName: 'rapport.pdf',
       size: 2048,
       contentType: 'application/pdf',
-      expiresAt: new Date(Date.now() + 7 * 86400000).toISOString(),
       passwordProtected: false
     }
   }).as('metadata');
-
   cy.intercept('POST', '**/api/files/download/**', {
     statusCode: 200,
-    headers: {
-      'content-type': 'application/pdf',
-      'content-disposition': 'attachment; filename="rapport.pdf"'
-    },
-    body: 'PDF-MOCK-CONTENT'
+    body: 'fake-pdf',
+    headers: { 'content-type': 'application/pdf' }
   }).as('download');
-
+  cy.intercept('POST', '**/api/files/upload', {
+    statusCode: 200,
+    body: {
+      id: MOCK_FILE.id,
+      downloadToken: MOCK_FILE.downloadToken,
+      downloadUrl: `/download/${MOCK_FILE.downloadToken}`
+    }
+  }).as('upload');
+  cy.intercept('POST', '**/api/files/upload/anonymous', {
+    statusCode: 200,
+    body: {
+      id: MOCK_FILE.id,
+      downloadToken: MOCK_FILE.downloadToken,
+      downloadUrl: `/download/${MOCK_FILE.downloadToken}`
+    }
+  }).as('uploadAnonymous');
+  cy.intercept('DELETE', '**/api/files/info/**', { statusCode: 204 }).as('deleteFile');
 });
 
 Cypress.Commands.add('visitHomeAsUser', () => {
-  cy.mockAuthApi();
-  cy.mockFilesApi();
   cy.visit('/home', {
     onBeforeLoad(win) {
       win.localStorage.setItem('token', FAKE_JWT);
-      win.localStorage.setItem('userId', FAKE_USER_ID);
+      win.localStorage.setItem('userId', FAKE_USER);
     }
   });
-  cy.wait('@listFiles');
-});
-
-// Réinitialise l'état partagé des fichiers mockés
-Cypress.Commands.add('resetMockFiles', () => {
-  cy.mockFilesApi();
 });
 
 export {};

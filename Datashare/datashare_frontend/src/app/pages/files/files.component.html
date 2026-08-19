@@ -2,71 +2,82 @@
   <h2>Mes Fichiers</h2>
 
   <!-- Bloc 1 : Spinner affiché pendant la phase de chargement HTTP -->
+  <!-- ✅ role="status" + texte caché pour lecteurs d’écran -->
   <div *ngIf="loading" class="text-center my-4">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Chargement...</span>
+    <div class="spinner-border text-primary" role="status" aria-live="polite">
+      <span class="visually-hidden">Chargement des fichiers…</span>
     </div>
   </div>
 
-  <!-- Bloc 2 : Message d'erreur si la requête au serveur échoue -->
-  <div *ngIf="errorMessage" class="alert alert-danger">
+  <!-- Bloc 2 : Message d'erreur -->
+  <!-- ✅ role="alert" pour vocalisation immédiate -->
+  <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
     {{ errorMessage }}
   </div>
 
-  <!-- Bloc 3 : Message d'information si le chargement est terminé mais qu'aucun fichier n'existe -->
-  <div *ngIf="!loading && files.length === 0" class="alert alert-info">
+  <!-- Bloc 3 : Aucun fichier -->
+  <!-- ✅ role="status" pour message informatif -->
+  <div *ngIf="!loading && files.length === 0" class="alert alert-info" role="status">
     Vous n'avez encore téléversé aucun fichier.
   </div>
 
-  <!-- Bloc 4 : Tableau d'affichage lorsque des fichiers sont disponibles -->
+  <!-- Bloc 4 : Tableau -->
+  <!-- ✅ aria-label pour décrire le tableau -->
   <div *ngIf="!loading && files.length > 0" class="table-responsive">
-    <table class="table table-striped align-middle">
+    <table class="table table-striped align-middle" aria-label="Liste de vos fichiers téléversés">
       <thead>
         <tr>
-          <th>Nom du fichier</th>
-          <th>Taille</th>
-          <th>Type</th>
-          <th>Date d'ajout</th>
-          <th>Actions</th>
+          <th scope="col">Nom du fichier</th>
+          <th scope="col">Taille</th>
+          <th scope="col">Type</th>
+          <th scope="col">Date d'ajout</th>
+          <th scope="col">Actions</th>
         </tr>
       </thead>
+
       <tbody>
-        <!-- Boucle Angular pour parcourir chaque fichier de la liste -->
         <tr *ngFor="let file of files">
           
-          <!-- Nom d'origine du fichier -->
+          <!-- Nom du fichier -->
           <td>
             <strong>{{ file.originalName }}</strong>
           </td>
 
-          <!-- Conversion de la taille d'octets vers Kilo-octets (Ko) -->
+          <!-- Taille -->
           <td>
             {{ (file.size / 1024).toFixed(1) }} Ko
           </td>
 
-          <!-- Type MIME du fichier -->
+          <!-- Type MIME -->
           <td>
             <span class="badge bg-secondary">{{ file.contentType }}</span>
           </td>
 
-          <!-- Formatage de la date serveur au format lisible JJ/MM/AAAA HH:mm -->
+          <!-- Date -->
           <td>
             {{ file.createdAt | date:'dd/MM/yyyy HH:mm' }}
           </td>
 
-          <!-- Boutons d'actions -->
+          <!-- Actions -->
           <td>
-            <!-- 🐛 FIX : bouton manquant pour récupérer le lien de partage du fichier -->
+            <!-- Bouton copier lien -->
+            <!-- ✅ aria-label pour lecteurs d’écran -->
             <button
               (click)="copyLink(file)"
               class="btn btn-sm btn-outline-primary me-2"
               [disabled]="!file.downloadToken"
+              aria-label="Copier le lien de téléchargement pour {{ file.originalName }}"
             >
               {{ copiedFileId === file.id ? 'Lien copié !' : 'Copier le lien' }}
             </button>
 
-            <!-- Bouton déclenchant la suppression du fichier par son id -->
-            <button (click)="deleteFile(file.id)" class="btn btn-sm btn-outline-danger">
+            <!-- Bouton supprimer -->
+            <!-- ✅ aria-label explicite -->
+            <button
+              (click)="deleteFile(file.id)"
+              class="btn btn-sm btn-outline-danger"
+              aria-label="Supprimer le fichier {{ file.originalName }}"
+            >
               Supprimer
             </button>
           </td>

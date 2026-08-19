@@ -1,0 +1,63 @@
+# DataShare — documentation soutenance (navigation simple)
+# mkdocs serve  →  http://127.0.0.1:8000
+
+site_name: DataShare documentation
+site_description: Partage de fichiers temporaire — Angular · Spring Boot · PostgreSQL
+
+theme:
+  name: material
+  language: fr
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/brightness-7
+        name: Mode sombre
+    - scheme: slate
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/brightness-4
+        name: Mode clair
+  features:
+    - navigation.top
+    - search.suggest
+    - content.code.copy
+  icon:
+    logo: material/cloud-upload
+
+plugins:
+  - search:
+      lang: fr
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight
+  - tables
+  - toc:
+      permalink: true
+
+# Navigation plate — une entrée = un sujet soutenance
+nav:
+  - Accueil: index.md
+  - Backend: backend.md
+  - Frontend: frontend.md
+  - Tests backend: testing-backend.md
+  - Tests frontend: testing-frontend.md
+  - Bdd : modele-donnees.md
+  - Performance: perf.md
+  - Sécurité: security.md
+  - Maintenance: maintenance.md
+  - Accessibilité: accessibility.md
+
+extra:
+  generator: false
+
+copyright: DataShare — formation

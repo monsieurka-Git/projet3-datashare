@@ -4,26 +4,62 @@
   <main class="ds-main">
     <section class="ds-card">
       <h1>Connexion</h1>
-      <form (ngSubmit)="onSubmit()">
-        <label>
-          Email
-          <input type="email" [(ngModel)]="form.email" name="email"
-                 placeholder="Saisissez votre email…" required />
-        </label>
-        <label>
-          Mot de passe
-          <input type="password" [(ngModel)]="form.password" name="password"
-                 placeholder="Saisissez votre mot de passe…" required />
-        </label>
-        <p class="ds-error" *ngIf="errorMessage">{{ errorMessage }}</p>
-        <button type="button" class="ds-text-link" (click)="goToRegister()">
+
+      <!-- ✅ Formulaire avec labels explicites et attributs ARIA -->
+      <form (ngSubmit)="onSubmit()" aria-label="Formulaire de connexion">
+        <!-- Champ email -->
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          [(ngModel)]="form.email"
+          name="email"
+          placeholder="Saisissez votre email…"
+          required
+          aria-required="true"
+          aria-label="Adresse email"
+        />
+
+        <!-- Champ mot de passe -->
+        <label for="password">Mot de passe</label>
+        <input
+          id="password"
+          type="password"
+          [(ngModel)]="form.password"
+          name="password"
+          placeholder="Saisissez votre mot de passe…"
+          required
+          aria-required="true"
+          aria-label="Mot de passe"
+        />
+
+        <!-- ✅ Message d’erreur vocalisé par les lecteurs d’écran -->
+        <p class="ds-error" *ngIf="errorMessage" role="alert">
+          {{ errorMessage }}
+        </p>
+
+        <!-- ✅ Bouton de navigation avec aria-label -->
+        <button
+          type="button"
+          class="ds-text-link"
+          (click)="goToRegister()"
+          aria-label="Aller à la page d'inscription"
+        >
           Créer un compte
         </button>
-        <button type="submit" class="ds-btn ds-btn--primary" style="margin-top:12px;">
+
+        <!-- ✅ Bouton principal avec aria-label -->
+        <button
+          type="submit"
+          class="ds-btn ds-btn--primary"
+          style="margin-top:12px;"
+          aria-label="Se connecter"
+        >
           Connexion
         </button>
       </form>
     </section>
   </main>
+
   <footer class="ds-footer">Copyright DataShare® 2025</footer>
 </div>

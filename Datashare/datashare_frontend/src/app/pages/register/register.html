@@ -4,32 +4,79 @@
   <main class="ds-main">
     <section class="ds-card">
       <h1>Créer un compte</h1>
-      <form (ngSubmit)="onSubmit()">
-        <label>
-          Email
-          <input type="email" [(ngModel)]="form.email" name="email"
-                 placeholder="Saisissez votre email…" required />
-        </label>
-        <label>
-          Mot de passe
-          <input type="password" [(ngModel)]="form.password" name="password"
-                 placeholder="Saisissez votre mot de passe…" required minlength="8" />
-        </label>
-        <label>
-          Vérification du mot de passe
-          <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword"
-                 placeholder="Saisissez-le à nouveau…" required minlength="8" />
-        </label>
-        <p class="ds-error" *ngIf="errorMessage">{{ errorMessage }}</p>
-        <p class="ds-success" *ngIf="successMessage">{{ successMessage }}</p>
-        <button type="button" class="ds-text-link" (click)="goToLogin()">
+
+      <!-- ✅ Formulaire accessible avec labels et messages d’erreur -->
+      <form (ngSubmit)="onSubmit()" aria-label="Formulaire de création de compte">
+        <!-- Champ email -->
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          [(ngModel)]="form.email"
+          name="email"
+          placeholder="Saisissez votre email…"
+          required
+          aria-required="true"
+          aria-label="Adresse email"
+        />
+
+        <!-- Champ mot de passe -->
+        <label for="password">Mot de passe</label>
+        <input
+          id="password"
+          type="password"
+          [(ngModel)]="form.password"
+          name="password"
+          placeholder="Saisissez votre mot de passe…"
+          required
+          minlength="8"
+          aria-required="true"
+          aria-label="Mot de passe"
+        />
+
+        <!-- Champ vérification -->
+        <label for="confirmPassword">Vérification du mot de passe</label>
+        <input
+          id="confirmPassword"
+          type="password"
+          [(ngModel)]="confirmPassword"
+          name="confirmPassword"
+          placeholder="Saisissez-le à nouveau…"
+          required
+          minlength="8"
+          aria-required="true"
+          aria-label="Confirmation du mot de passe"
+        />
+
+        <!-- ✅ Messages d’erreur et de succès accessibles -->
+        <p class="ds-error" *ngIf="errorMessage" role="alert">
+          {{ errorMessage }}
+        </p>
+        <p class="ds-success" *ngIf="successMessage" role="status">
+          {{ successMessage }}
+        </p>
+
+        <!-- ✅ Boutons avec aria-label -->
+        <button
+          type="button"
+          class="ds-text-link"
+          (click)="goToLogin()"
+          aria-label="Aller à la page de connexion"
+        >
           J'ai déjà un compte
         </button>
-        <button type="submit" class="ds-btn ds-btn--primary" style="margin-top:12px;">
+
+        <button
+          type="submit"
+          class="ds-btn ds-btn--primary"
+          style="margin-top:12px;"
+          aria-label="Créer mon compte"
+        >
           Créer mon compte
         </button>
       </form>
     </section>
   </main>
+
   <footer class="ds-footer">Copyright DataShare® 2025</footer>
 </div>

@@ -2,67 +2,81 @@
   <app-header-bar [showAddFiles]="true"></app-header-bar>
 
   <div class="ds-home-shell">
-    <!-- Colonne gauche (dégradé) -->
-    <aside class="ds-home-side">
+
+    <!-- Colonne gauche -->
+    <aside class="ds-home-side" aria-label="Navigation latérale">
       <div class="ds-side-nav">
-        <button type="button" class="ds-side-item active">Mes fichiers</button>
+        <!-- Bouton actif -->
+        <!-- ✅ aria-current pour indiquer l’onglet actif -->
+        <button
+          type="button"
+          class="ds-side-item active"
+          aria-current="page"
+        >
+          Mes fichiers
+        </button>
       </div>
       <div class="ds-side-footer">Copyright DataShare® 2025</div>
     </aside>
 
-    <!-- Colonne droite (liste) -->
+    <!-- Colonne droite -->
     <section class="ds-home-main">
       <div class="ds-files-header">
         <h1>Mes fichiers</h1>
-        <div class="ds-tabs">
+
+        <!-- Onglets -->
+        <!-- Ajout aria-label + aria-selected -->
+        <div class="ds-tabs" role="tablist">
           <button
             type="button"
             class="ds-tab"
-            [class.active]="activeTab === 'Tous'"
+            role="tab"
+            aria-selected="{{ activeTab === 'Tous' }}"
             (click)="selectTab('Tous')"
           >Tous</button>
+
           <button
             type="button"
             class="ds-tab"
-            [class.active]="activeTab === 'Actifs'"
+            role="tab"
+            aria-selected="{{ activeTab === 'Actifs' }}"
             (click)="selectTab('Actifs')"
           >Actifs</button>
+
           <button
             type="button"
             class="ds-tab"
-            [class.active]="activeTab === 'Expirés'"
+            role="tab"
+            aria-selected="{{ activeTab === 'Expirés' }}"
             (click)="selectTab('Expirés')"
           >Expiré</button>
         </div>
       </div>
 
       <!-- Chargement -->
-      <div *ngIf="isLoading" class="ds-empty">
+      <div *ngIf="isLoading" class="ds-empty" aria-live="polite">
         Chargement de vos fichiers…
       </div>
 
-      <!-- Erreur API -->
-      <div *ngIf="!isLoading && loadError" class="ds-empty" style="border-color:#f5a;">
+      <!-- Erreur -->
+      <div *ngIf="!isLoading && loadError" class="ds-empty" role="alert">
         <p style="color:#b00020;margin:0 0 12px;">{{ loadError }}</p>
         <button type="button" class="ds-chip-btn ds-chip-btn--primary" (click)="refreshFiles()">
           Réessayer
         </button>
       </div>
 
-      <!-- Liste vide (chargement OK, aucun fichier pour ce compte) -->
-      <div *ngIf="!isLoading && !loadError && files.length === 0" class="ds-empty">
-        <p style="margin:0 0 8px;">Vous n'avez encore téléversé aucun fichier avec ce compte.</p>
-        <p style="margin:0;font-size:0.9rem;opacity:0.75;">
-          Les uploads anonymes (sans connexion) n'apparaissent pas ici.
-          Utilisez « + Ajouter des fichiers » une fois connecté.
-        </p>
+      <!-- Liste vide -->
+      <div *ngIf="!isLoading && !loadError && files.length === 0" class="ds-empty" role="status">
+        <p>Vous n'avez encore téléversé aucun fichier avec ce compte.</p>
       </div>
 
-      <!-- Filtre actif sans résultat -->
-      <div *ngIf="!isLoading && !loadError && files.length > 0 && displayedFiles.length === 0" class="ds-empty">
+      <!-- Filtre sans résultat -->
+      <div *ngIf="!isLoading && !loadError && files.length > 0 && displayedFiles.length === 0" class="ds-empty" role="status">
         Aucun fichier pour cet onglet / filtre.
       </div>
 
+      <!-- Liste -->
       <div class="ds-files-list" *ngIf="!isLoading && !loadError && displayedFiles.length > 0">
         <div class="ds-file-row" *ngFor="let file of displayedFiles">
           <div class="ds-file-info">
@@ -75,23 +89,29 @@
           </div>
 
           <div class="ds-file-actions">
+            <!-- Copier lien -->
             <button
               type="button"
               class="ds-chip-btn"
               title="Copier le lien"
+              aria-label="Copier le lien de téléchargement pour {{ file.originalName }}"
               [disabled]="!file.downloadToken"
               (click)="copyLink(file)"
             >🔗</button>
 
+            <!-- Supprimer -->
             <button
               type="button"
               class="ds-chip-btn ds-chip-btn--danger"
+              aria-label="Supprimer le fichier {{ file.originalName }}"
               (click)="confirmDelete(file)"
             >Supprimer</button>
 
+            <!-- Accéder -->
             <button
               type="button"
               class="ds-chip-btn ds-chip-btn--primary"
+              aria-label="Accéder au fichier {{ file.originalName }}"
               [disabled]="!file.downloadToken"
               (click)="onAccess(file)"
             >Accéder →</button>
@@ -99,7 +119,9 @@
         </div>
       </div>
 
-      <p class="ds-copy-feedback" *ngIf="copiedId">Lien copié dans le presse-papiers</p>
+      <p class="ds-copy-feedback" *ngIf="copiedId" role="status">
+        Lien copié dans le presse-papiers
+      </p>
     </section>
   </div>
 
