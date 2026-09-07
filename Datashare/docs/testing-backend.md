@@ -1,28 +1,28 @@
 # Tests backend
 
-## Commande
+## 1. Outils
+
+1. **JUnit 5** et **Mockito** pour les tests unitaires.
+2. **JaCoCo** pour mesurer la couverture.
+
+## 2. Commande
 
 ```bash
 cd datashare_backend
 ./mvnw clean test
-# Rapport JaCoCo : target/site/jacoco/index.html
 ```
 
-## Résultat (JaCoCo)
+1. Rapport : `target/site/jacoco/index.html`.
 
-![Couverture JaCoCo](images/coverage-backend-jacoco.png)
+![Test coverage](images\coverage-backend-jacoco.png)
 
-| Indicateur | Valeur |
-|------------|--------|
-| Instructions (global) | **~81 %** |
-| Seuil projet | ≥ **75 %** ✅ |
-| Tests | ~60 JUnit/Mockito, **0 échec** |
+## 3. Objectifs
 
-Packages bien couverts : `JWT`, `scheduler` (100 %), `service`, `controller`.
+1. Suite de tests unitaire verte (environ 60 tests).
+2. Couverture d’instructions **≥ 75 %** (seuil défini dans le `pom.xml`).
+3. Parcours couverts : authentification, upload, téléchargement, purge.
 
-## Fonctionnalités critiques testées
+## 4. Emplacement
 
-- Authentification (register / login)
-- Upload (validation taille / extension)
-- Téléchargement (metadata + POST binaire)
-- Purge des fichiers expirés
+1. Sources de test : `src/test/java`.
+2. Les services et contrôleurs sont testés avec des dépendances mockées.

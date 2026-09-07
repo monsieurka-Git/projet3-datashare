@@ -1,36 +1,41 @@
 # Frontend
 
-## Prérequis
+## 1. Prérequis
 
-- Node.js 20+, npm
-- Backend sur `:8080` pour les appels API réels
+1. Node.js 20+ et npm.
+2. Backend démarré sur `:8080` pour les appels réels.
 
-## Démarrage
+## 2. Démarrage
 
 ```bash
 cd datashare_frontend
 npm install
 npm start
-# http://localhost:4200
 ```
 
-## Organisation 
+1. Application disponible (lien actif si frontend started) : [http://localhost:4200](http://localhost:4200).
 
-| Dossier | Contenu |
+## 3. Organisation
+
+| Élément | Contenu |
 |---------|---------|
-| `pages/` | welcome, login, register, home, upload, download |
-| `services/` | `AuthService`, `FileService` |
-| `guards/` | `AuthGuard` (route `/home`) |
-| `interceptors/` | Ajoute le JWT Bearer |
-| `components/` | header, modal |
+| `pages/` | welcome, login, register, upload, home, download |
+| `services/` | AuthService, FileService |
+| `guards/` | AuthGuard (protection de `/home`) |
+| `interceptors/` | Injection du JWT Bearer |
+| `components/` | en-tête, modales |
 
-```
-Navigateur → pages → services HTTP → API :8080
-                 ↘ AuthGuard / interceptor JWT
-```
+## 4. Parcours principaux
 
-## Écrans
+1. **Welcome** → entrée dans l’application.
+2. **Login / Register** → authentification.
+3. **Upload** → dépôt du fichier et obtention du lien.
+4. **Home** → historique et suppression.
+5. **Download** → page publique du lien partagé.
 
-Welcome (cloud) → Login / Register → Upload → lien → Download → Mes fichiers (suppression).
+## 5. User Experience (UX) et gestion d’erreurs
 
-voir [accessibility](accessibility.md)
+1. Messages d’erreur affichés en texte (login, upload, download).
+2. Bouton **Se déconnecter** visible sur les pages connectées.
+3. Confirmation avant suppression d’un fichier.
+4. Labels et attributs ARIA sur les éléments principaux (voir Accessibilité).

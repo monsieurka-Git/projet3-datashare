@@ -1,5 +1,5 @@
-# DataShare — documentation soutenance (navigation simple)
-# mkdocs serve  →  http://127.0.0.1:8000
+# DataShare — documentation
+# mkdocs serve → http://127.0.0.1:8000
 
 site_name: DataShare documentation
 site_description: Partage de fichiers temporaire — Angular · Spring Boot · PostgreSQL
@@ -44,14 +44,13 @@ markdown_extensions:
   - toc:
       permalink: true
 
-# Navigation plate — une entrée = un sujet soutenance
 nav:
   - Accueil: index.md
   - Backend: backend.md
   - Frontend: frontend.md
+  - Guide utilisateur: guide-utilisateur.md
   - Tests backend: testing-backend.md
   - Tests frontend: testing-frontend.md
-  - Bdd : modele-donnees.md
   - Performance: perf.md
   - Sécurité: security.md
   - Maintenance: maintenance.md
